@@ -12,7 +12,7 @@ contract Marketplace is AccessControl {
 
   INFT721 private nftToken;
 
-  EnumerableMap.UintToAddressMap private _items;
+  EnumerableMap.UintToAddressMap private _owners;
   // сопоставление ID => address
 
   mapping(address => EnumerableSet.UintSet) private _holderTokens;
@@ -24,9 +24,13 @@ contract Marketplace is AccessControl {
     uint256 price;
   }
 
+  mapping(uint256 => Item) private _items;
+  // здесь будут храниться все данные об NFT в формате id => Item;
+
   bytes32 public constant ADMIN = keccak256("ADMIN");
 
   constructor(address _nftToken) {
+    _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
     nftToken = INFT721(_nftToken);
     _setupRole(ADMIN, msg.sender);
   }
