@@ -9,6 +9,7 @@ import "hardhat/console.sol";
 
 contract Marketplace is AccessControl {
   using EnumerableMap for EnumerableMap.UintToAddressMap;
+  using EnumerableSet for EnumerableSet.UintSet;
 
   INFT721 private nftToken;
 
@@ -19,9 +20,10 @@ contract Marketplace is AccessControl {
   // по адресу юзера храним айдишники нфт
 
   struct Item {
-    uint256 id;
-    string description;
+    string name;
     uint256 price;
+    address owner;
+    uint256 id;
   }
 
   mapping(uint256 => Item) private _items;
@@ -35,5 +37,23 @@ contract Marketplace is AccessControl {
     _setupRole(ADMIN, msg.sender);
   }
 
-  function createItem(string memory uri) external {}
+  function createItem(string memory _uri, string memory _name)
+    external
+    returns (Item memory)
+  {
+    uint256 tokenId = mint(msg.sender, _uri);
+    _items[tokenId].name = _name;
+    _items[tokenId].price = 0;
+    _items[tokenId].owner = _owners.get(tokenId);
+    _items[tokenId].id = tokenId;
+
+    return _items[tokenId];
+  }
+
+  function mint(address _to, string memory _uri) internal returns (uint256) {
+    uint256 tokenId = nftToken.mint(_to, _uri);
+    _owners.set(tokenId, _to);
+    _holderTokens[_to].add(tokenId);
+    return tokenId;
+  }
 }

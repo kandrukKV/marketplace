@@ -12,11 +12,12 @@ contract V721 is ERC721, ERC721URIStorage, AccessControl {
   bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
   Counters.Counter private _tokenIdCounter;
 
-  constructor(address _minterAddress)
-    ERC721("Marketplace nft 721 token", "V721")
-  {
-    _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-    _grantRole(MINTER_ROLE, _minterAddress);
+  constructor() ERC721("Marketplace nft 721 token", "V721") {
+    _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+  }
+
+  function setMiner(address _miner) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    _setupRole(MINTER_ROLE, _miner);
   }
 
   function mint(address to, string memory uri)
