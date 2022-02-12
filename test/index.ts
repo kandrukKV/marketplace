@@ -1,19 +1,19 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 
-describe("Greeter", function () {
-  it("Should return the new greeting once it's changed", async function () {
-    const Greeter = await ethers.getContractFactory("Greeter");
-    const greeter = await Greeter.deploy("Hello, world!");
-    await greeter.deployed();
+describe("Marketplace", function () {
+  let nftContract: any;
+  let marketplace: any;
+  let owner: any;
+  let user: any;
 
-    expect(await greeter.greet()).to.equal("Hello, world!");
-
-    const setGreetingTx = await greeter.setGreeting("Hola, mundo!");
-
-    // wait until the transaction is mined
-    await setGreetingTx.wait();
-
-    expect(await greeter.greet()).to.equal("Hola, mundo!");
+  before(async function name() {
+    const nft = await ethers.getContractFactory("V721");
+    const market = await ethers.getContractFactory("Marketplace");
+    [owner, user] = await ethers.getSigners();
+    nftContract = await nft.deploy();
+    marketplace = await market.deploy();
   });
+
+  it("Should return the new greeting once it's changed", async function () {});
 });

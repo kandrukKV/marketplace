@@ -16,8 +16,8 @@ contract V721 is ERC721, ERC721URIStorage, AccessControl {
     _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
   }
 
-  function setMiner(address _miner) public onlyRole(DEFAULT_ADMIN_ROLE) {
-    _setupRole(MINTER_ROLE, _miner);
+  function setMinter(address _minter) public onlyRole(DEFAULT_ADMIN_ROLE) {
+    _setupRole(MINTER_ROLE, _minter);
   }
 
   function mint(address to, string memory uri)
