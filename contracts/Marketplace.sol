@@ -61,14 +61,6 @@ contract Marketplace is AccessControl {
     return tokenId;
   }
 
-  function getHolderTokens(address owner, uint256 index)
-    public
-    view
-    returns (uint256)
-  {
-    return _holderTokens[owner].at(index);
-  }
-
   function listItem(uint256 _tokenId, uint256 _price) public {
     checkParams(_tokenId, _price);
     _items[_tokenId].price = _price;
@@ -76,9 +68,9 @@ contract Marketplace is AccessControl {
   }
 
   function buyItem(uint256 _tokenId) public payable {
+    require(!_holderTokens[msg.sender].contains(_tokenId), "It is your token");
     require(_listingList.contains(_tokenId), "Token is not for sale.");
     require(msg.value >= _items[_tokenId].price, "Insufficient funds.");
-    require(_listingList.contains(_tokenId), "No sale");
 
     address currentOwner = _items[_tokenId].owner;
 
@@ -116,10 +108,9 @@ contract Marketplace is AccessControl {
     require(msg.sender != _items[_tokenId].owner, "You cat't make the bid.");
     require(_auctionList.contains(_tokenId), "No auction");
     require(
-      msg.value > _items[_tokenId].price,
+      msg.value >= _items[_tokenId].price,
       "The bid must be more then current price."
     );
-    require(msg.value >= _items[_tokenId].price, "Insufficient funds.");
 
     _items[_tokenId].bidCount += 1;
     _items[_tokenId].buyer = msg.sender;
@@ -130,7 +121,7 @@ contract Marketplace is AccessControl {
     require(_auctionList.contains(_tokenId), "No auction");
     require(
       _holderTokens[msg.sender].contains(_tokenId),
-      " No token is available."
+      "No token is available."
     );
     require(
       (block.timestamp - _items[_tokenId].startTime) > auctionDuration,
@@ -172,7 +163,7 @@ contract Marketplace is AccessControl {
   function cancelAuction(uint256 _tokenId) public {
     require(
       _holderTokens[msg.sender].contains(_tokenId),
-      " No token is available."
+      "No token is available."
     );
     require(_auctionList.contains(_tokenId), "The token is missing");
     if (_items[_tokenId].bidCount > 0) {
@@ -193,7 +184,7 @@ contract Marketplace is AccessControl {
     // нужна ли проверка на нфт контракте ???
     require(
       _holderTokens[msg.sender].contains(_tokenId),
-      " No token is available."
+      "No token is available."
     );
     require(!_listingList.contains(_tokenId), "The token is for sale");
     require(!_auctionList.contains(_tokenId), "The token is sold at auction.");

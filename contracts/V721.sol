@@ -32,14 +32,6 @@ contract V721 is ERC721, ERC721URIStorage, AccessControl {
     return tokenId;
   }
 
-  function burn(uint256 tokenId) public onlyRole(MINTER_ROLE) {
-    require(
-      _isApprovedOrOwner(_msgSender(), tokenId),
-      "Caller is not owner nor approved"
-    );
-    _burn(tokenId);
-  }
-
   function _burn(uint256 tokenId) internal override(ERC721, ERC721URIStorage) {
     super._burn(tokenId);
   }
