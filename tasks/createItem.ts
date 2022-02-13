@@ -13,11 +13,10 @@ task("createItem", "Mint NFT721 and create new Item in Marketplace")
     const contract = new hre.ethers.Contract(
       process.env.MARKET_CONTRACT_ADDRESS || "",
       marketplace.interface,
-      accounts[2]
+      accounts[1]
     );
 
-    const item = await contract.createItem(taskArgs.uri, taskArgs.name);
-    console.log("Was created item:", item);
+    await contract.createItem(taskArgs.uri, taskArgs.name);
   });
 
 module.exports = {};

@@ -2,6 +2,7 @@ import "./createItem.ts";
 import "./setMinter.ts";
 import "./getItemsByOwner.ts";
 import "./listItem.ts";
+import "./cancel.ts";
 import "./buyItem.ts";
 import "./listenItemToAuction.ts";
 import "./makeBid.ts";

@@ -13,18 +13,18 @@ task("makeBid", "Buy item on the marketplace")
     const marketContract = new hre.ethers.Contract(
       process.env.MARKET_CONTRACT_ADDRESS || "",
       marketplace.interface,
-      accounts[3]
+      accounts[0]
     );
 
     const amount = hre.ethers.utils.parseEther(taskArgs.price);
 
-    await marketContract.makeBid(taskArgs.id, amount, { value: amount });
+    await marketContract.makeBid(taskArgs.id, { value: amount });
 
-    const item = marketContract.getItem(taskArgs.id);
+    const item = await marketContract.getItem(taskArgs.id);
 
     console.log("Changed item", item);
   });
 
 module.exports = {};
 
-// npx hardhat buyItem --id 2 --network localhost
+// npx hardhat makeBid --id 0 --price 3 --network localhost

@@ -12,7 +12,7 @@ task("buyItem", "Buy item on the marketplace")
     const marketContract = new hre.ethers.Contract(
       process.env.MARKET_CONTRACT_ADDRESS || "",
       marketplace.interface,
-      accounts[3]
+      accounts[2]
     );
 
     const currentItem = await marketContract.getItem(taskArgs.id);

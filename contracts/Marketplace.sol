@@ -47,17 +47,12 @@ contract Marketplace is AccessControl {
     minBidCount = 2;
   }
 
-  function createItem(string memory _uri, string memory _name)
-    external
-    returns (uint256)
-  {
+  function createItem(string memory _uri, string memory _name) external {
     uint256 tokenId = mint(msg.sender, _uri);
     _items[tokenId].name = _name;
     _items[tokenId].price = 0;
     _items[tokenId].owner = msg.sender;
     _items[tokenId].id = tokenId;
-
-    return tokenId;
   }
 
   function mint(address _to, string memory _uri) internal returns (uint256) {
@@ -117,18 +112,14 @@ contract Marketplace is AccessControl {
     _items[_tokenId].bidCount = 0;
   }
 
-  function makeBid(uint256 _tokenId, uint256 _price) public payable {
+  function makeBid(uint256 _tokenId) public payable {
+    require(msg.sender != _items[_tokenId].owner, "You cat't make the bid.");
     require(_auctionList.contains(_tokenId), "No auction");
     require(
-      _price > _items[_tokenId].price,
+      msg.value > _items[_tokenId].price,
       "The bid must be more then current price."
     );
     require(msg.value >= _items[_tokenId].price, "Insufficient funds.");
-
-    (bool success, ) = _items[_tokenId].buyer.call{
-      value: _items[_tokenId].price
-    }("");
-    require(success, "Transfer failed.");
 
     _items[_tokenId].bidCount += 1;
     _items[_tokenId].buyer = msg.sender;
@@ -197,7 +188,7 @@ contract Marketplace is AccessControl {
   }
 
   function checkParams(uint256 _tokenId, uint256 _price) internal view {
-    require(_price > 0, "StartPrice must be more them zero.");
+    require(_price > 0, "Price must be more them zero.");
 
     // нужна ли проверка на нфт контракте ???
     require(

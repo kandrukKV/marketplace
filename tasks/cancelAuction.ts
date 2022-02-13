@@ -12,12 +12,12 @@ task("cancelAuction", "Finish current auction")
     const marketContract = new hre.ethers.Contract(
       process.env.MARKET_CONTRACT_ADDRESS || "",
       marketplace.interface,
-      accounts[3]
+      accounts[2]
     );
 
     await marketContract.cancelAuction(taskArgs.id);
 
-    const item = marketContract.getItem(taskArgs.id);
+    const item = await marketContract.getItem(taskArgs.id);
 
     console.log("Changed item", item);
   });

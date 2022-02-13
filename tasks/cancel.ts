@@ -12,7 +12,7 @@ task("cancel", "Cancel item on the marketplace")
     const marketContract = new hre.ethers.Contract(
       process.env.MARKET_CONTRACT_ADDRESS || "",
       marketplace.interface,
-      accounts[3]
+      accounts[1]
     );
 
     await marketContract.cancel(taskArgs.id);

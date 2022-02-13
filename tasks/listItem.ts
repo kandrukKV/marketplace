@@ -15,16 +15,23 @@ task("listItem", "list item to marketplace")
     const marketContract = new hre.ethers.Contract(
       process.env.MARKET_CONTRACT_ADDRESS || "",
       marketplace.interface,
-      accounts[2]
+      accounts[1]
     );
 
     const nftContract = new hre.ethers.Contract(
       process.env.NFT_CONTRACT_ADDRESS || "",
       nft.interface,
-      accounts[2]
+      accounts[1]
     );
 
-    await nftContract.approve(process.env.MARKET_CONTRACT_ADDRESS, taskArgs.id);
+    const approvedAddress = await nftContract.getApproved(taskArgs.id);
+
+    if (approvedAddress !== process.env.MARKET_CONTRACT_ADDRESS) {
+      await nftContract.approve(
+        process.env.MARKET_CONTRACT_ADDRESS,
+        taskArgs.id
+      );
+    }
 
     const amount = hre.ethers.utils.parseEther(taskArgs.price);
     console.log("Amount:", amount);
