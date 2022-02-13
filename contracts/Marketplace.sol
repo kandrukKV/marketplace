@@ -25,13 +25,12 @@ contract Marketplace is AccessControl {
   // тут токены, которые выставлены на аукцион
 
   struct Item {
-    string name;
     uint256 price;
-    address owner;
     uint256 id;
     uint256 startTime;
     uint256 bidCount;
     address buyer;
+    address owner;
   }
 
   mapping(uint256 => Item) private _items;
@@ -47,9 +46,8 @@ contract Marketplace is AccessControl {
     minBidCount = 2;
   }
 
-  function createItem(string memory _uri, string memory _name) external {
+  function createItem(string memory _uri) external {
     uint256 tokenId = mint(msg.sender, _uri);
-    _items[tokenId].name = _name;
     _items[tokenId].price = 0;
     _items[tokenId].owner = msg.sender;
     _items[tokenId].id = tokenId;
@@ -111,6 +109,8 @@ contract Marketplace is AccessControl {
       msg.value >= _items[_tokenId].price,
       "The bid must be more then current price."
     );
+
+    // вернуть бабки прошлому чуваку
 
     _items[_tokenId].bidCount += 1;
     _items[_tokenId].buyer = msg.sender;
