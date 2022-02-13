@@ -2,8 +2,9 @@ import { task } from "hardhat/config";
 // eslint-disable-next-line node/no-unpublished-import
 import "@nomiclabs/hardhat-waffle";
 
-task("buyItem", "Buy item on the marketplace")
+task("makeBid", "Buy item on the marketplace")
   .addParam("id", "token id")
+  .addParam("price", "new price")
   .setAction(async (taskArgs, hre) => {
     const marketplace = await hre.ethers.getContractFactory("Marketplace");
 
@@ -15,9 +16,13 @@ task("buyItem", "Buy item on the marketplace")
       accounts[3]
     );
 
-    const currentItem = await marketContract.getItem(taskArgs.id);
+    const amount = hre.ethers.utils.parseEther(taskArgs.price);
 
-    await marketContract.buyItem(taskArgs.id, { value: currentItem.price });
+    await marketContract.makeBid(taskArgs.id, amount, { value: amount });
+
+    const item = marketContract.getItem(taskArgs.id);
+
+    console.log("Changed item", item);
   });
 
 module.exports = {};

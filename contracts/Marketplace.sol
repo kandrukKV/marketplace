@@ -212,6 +212,17 @@ contract Marketplace is AccessControl {
     );
   }
 
+  function setMinBidCount(uint256 _bidCount) external onlyRole(ADMIN) {
+    minBidCount = _bidCount;
+  }
+
+  function setAuctionDuration(uint256 _auctionDuration)
+    external
+    onlyRole(ADMIN)
+  {
+    auctionDuration = _auctionDuration;
+  }
+
   // view functions
 
   function getItem(uint256 tokenId) public view returns (Item memory) {
